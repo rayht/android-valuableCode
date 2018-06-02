@@ -4,13 +4,19 @@ public class UserManager implements IUserManager{
     Person person;
     private static UserManager sInstance = null;
 
-    private UserManager() {
+    public UserManager() {
 
     }
+
+
     public static synchronized UserManager getInstance() {
         if (sInstance == null) {
             sInstance = new UserManager();
         }
+        return sInstance;
+    }
+
+    public UserManager getUserManager() {
         return sInstance;
     }
 

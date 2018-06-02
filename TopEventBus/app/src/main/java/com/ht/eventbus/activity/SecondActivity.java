@@ -24,7 +24,9 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     public void userManager(View view) {
-        userManager = Hermes.getDefault().getInstance(IUserManager.class);
+//        userManager = Hermes.getDefault().getInstance(IUserManager.class);
+        userManager = Hermes.getDefault().getObject(IUserManager.class);
+        userManager.setPerson(new Person("XiaoXiao", "123456"));
         Person person = userManager.getPerson();
         Toast.makeText(this, "Persion=" + person, Toast.LENGTH_SHORT).show();
     }

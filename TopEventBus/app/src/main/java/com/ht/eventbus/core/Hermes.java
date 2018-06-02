@@ -12,8 +12,10 @@ import com.ht.eventbus.request.RequestParameter;
 import com.ht.eventbus.service.HermesService;
 import com.ht.eventbus.util.TypeUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 
 /**
  * Author Leiht
@@ -84,18 +86,53 @@ public class Hermes {
         typeCenter = TypeCenter.getInstance();
     }
 
+    public <T> T getObject(Class<T> clazz, String methodName, Object... parameters) {
+        try {
+            //相当于做了一个检测，并没有从其它进程中获取信息
+            Method method = null;
+            if(parameters == null || parameters.length <= 0) {
+                method = clazz.getMethod(methodName);
+            }else {
+                Class<?>[] parameterTypes = new Class<?>[parameters.length];
+                for(int i = 0; i < parameterTypes.length; i++) {
+                    Object object = parameters[i];
+                    Class<?> parameterType = object.getClass();
+                    parameterTypes[i] = parameterType;
+                }
+                method = clazz.getMethod(methodName, parameterTypes);
+            }
+
+            Response response = sendRequest(HermesService.class, clazz, method, parameters);
+            //返回在本进程的代理对象
+            return getProxy(HermesService.class, clazz);
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
-     * 夸进程获取单例对象
+     * 发生在客户端，夸进程获取单例对象
+     *
      * @param clazz
      * @param parameters
      * @param <T>
      * @return
      */
     public <T> T getInstance(Class<T> clazz, Object... parameters) {
+        //相当于做了一个检测，并没有从其它进程中获取信息
         Response response = sendRequest(HermesService.class, clazz, null, parameters);
+        //返回在本进程的代理对象
         return getProxy(HermesService.class, clazz);
     }
 
+    /**
+     * 获取代理对象
+     *
+     * @param service
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     private <T> T getProxy(Class<? extends HermesService> service, Class clazz) {
         ClassLoader classLoader = service.getClassLoader();
         T proxy = (T) Proxy.newProxyInstance(classLoader, new Class<?>[]{clazz}, new HermesInvocationHandler(service, clazz));
@@ -170,7 +207,5 @@ public class Hermes {
         }
         Request request = new Request(GSON.toJson(requestBean), TYPE_NEW);
         return serviceConnectionManager.request(hermesServiceClass, request);
-
-
     }
 }
