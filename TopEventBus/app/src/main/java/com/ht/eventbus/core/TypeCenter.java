@@ -16,6 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date 2018-05-25
  */
 public class TypeCenter {
+
+    private static final String TAG = "TypeCenter";
+
     /**
      * 单例对象
      */
@@ -80,12 +83,12 @@ public class TypeCenter {
     public Method getMethod(Class<?> clazz, RequestBean requestBean) {
         String name = requestBean.getMethodName();
         if ( name!= null) {
-            Log.i("david", "getMethod: 1======="+name);
+            Log.i(TAG, "getMethod: "+name);
             mRawMethods.putIfAbsent(clazz, new ConcurrentHashMap<String, Method>());
             ConcurrentHashMap<String, Method> methods = mRawMethods.get(clazz);
             Method method = methods.get(name);
             if (method != null) {
-                Log.i("david", "getMethod: "+method.getName());
+                Log.i(TAG, "getMethod: "+method.getName());
                 return method;
             }
             int pos = name.indexOf('(');
@@ -103,8 +106,6 @@ public class TypeCenter {
             return method;
         }
         return null;
-
-
     }
     public Class<?> getClassType(String name)   {
         if (TextUtils.isEmpty(name)) {
