@@ -28,16 +28,15 @@ public class HermesInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Response responce = Hermes.getDefault().sendObjectRequest(hermeService, clazz, method, args);
-        if (!TextUtils.isEmpty(responce.getData())) {
-            ResponseBean responceBean = GSON.fromJson(responce.getData(), ResponseBean.class);
+        Response response = Hermes.getDefault().sendObjectRequest(hermeService, clazz, method, args);
+        if (!TextUtils.isEmpty(response.getData())) {
+            ResponseBean responceBean = GSON.fromJson(response.getData(), ResponseBean.class);
             if (responceBean.getData() != null) {
-                Object getUserReslut = responceBean.getData();//"davaid:123456"
+                Object getUserReslut = responceBean.getData();
                 String data = GSON.toJson(getUserReslut);
                 Class stringgetUser = method.getReturnType();
                 Object o = GSON.fromJson(data, stringgetUser);
                 return o;
-
             }
         }
         return null;

@@ -15,6 +15,7 @@ import com.ht.eventbus.core.Hermes;
 public class MainActivity extends AppCompatActivity {
 
     TextView text;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,18 +26,11 @@ public class MainActivity extends AppCompatActivity {
         Hermes.getDefault().init(this);
         Hermes.getDefault().register(UserManager.class);
         UserManager.getInstance().setPerson(new Person("Leiht", "881129"));
-//        Hermes.getDefault().register(DownManager.class);
-//        DownManager.getInstance().setFileRecord(new FileRecord("/sdcard/0",12344));
     }
 
-    public void change(View view)
-    {
-        startActivity(new Intent(this,SecondActivity.class));
+    public void change(View view) {
+        startActivity(new Intent(this, SecondActivity.class));
     }
-//主线程---子线程接受
-//    public void receive(Friend friend ) {
-//        Log.i("david", "thread: " + Thread.currentThread().getName());
-//    }
 
     public void postMsg(View view) {
         EventBus.getDefault().post("Hello Event");
@@ -44,15 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void receiveMsg(String msg) {
-        Toast.makeText(this,"Receive post msg " + msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Receive post msg " + msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
-
-//    public void getPerson(View view) {
-//        Toast.makeText(this,"----->  "+UserManager.getInstance().getPerson(), Toast.LENGTH_SHORT).show();
-//    }
 }

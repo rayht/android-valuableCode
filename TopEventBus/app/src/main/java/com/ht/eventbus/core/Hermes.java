@@ -60,7 +60,6 @@ public class Hermes {
     }
 
     private Hermes() {
-        typeCenter = TypeCenter.getInstance();
         serviceConnectionManager = ServiceConnectionManager.getInstance();
     }
 
@@ -82,6 +81,7 @@ public class Hermes {
 
     public void init(Context context) {
         mContext = context.getApplicationContext();
+        typeCenter = TypeCenter.getInstance();
     }
 
     /**

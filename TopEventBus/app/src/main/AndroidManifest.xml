@@ -17,7 +17,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.SecondActivity" android:process=":f"/>
+        <service android:name=".service.HermesService" />
+
+        <activity
+            android:name=".activity.SecondActivity"
+            android:label="@string/title_activity_second"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

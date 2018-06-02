@@ -24,31 +24,19 @@ public class ServiceConnectionManager {
     /**
      * 单例对象
      */
-    protected volatile static ServiceConnectionManager defaultInstance;
+    private static final ServiceConnectionManager ourInstance = new ServiceConnectionManager();
 
-    //保存Binder对象
-    private final ConcurrentHashMap<Class<? extends HermesService>, EventBusService> mHermesServices;
-
-    //Class对应的链接对象
-    private final ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection> mHermesServiceConnections;
-
+    private final ConcurrentHashMap<Class<? extends HermesService>, EventBusService> mHermesServices = new ConcurrentHashMap<Class<? extends HermesService>, EventBusService>();
 
     public static ServiceConnectionManager getInstance() {
-        ServiceConnectionManager instance = defaultInstance;
-        if (instance == null) {
-            synchronized (Hermes.class) {
-                instance = ServiceConnectionManager.defaultInstance;
-                if (instance == null) {
-                    instance = ServiceConnectionManager.defaultInstance = new ServiceConnectionManager();
-                }
-            }
-        }
-        return instance;
+        return ourInstance;
     }
 
+    //Class对应的链接对象
+    private final ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection> mHermesServiceConnections = new ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection>();
+
+
     private ServiceConnectionManager() {
-        mHermesServices = new ConcurrentHashMap<Class<? extends HermesService>, EventBusService>();
-        mHermesServiceConnections = new ConcurrentHashMap<Class<? extends HermesService>, HermesServiceConnection>();
     }
 
     public void bind(Context context, String packageName, Class<? extends HermesService> service) {
@@ -68,16 +56,16 @@ public class ServiceConnectionManager {
         EventBusService eventBusService = mHermesServices.get(hermesServiceClass);
         if (eventBusService != null) {
             try {
-                Response responce = eventBusService.send(request);
-                return responce;
+                Response response = eventBusService.send(request);
+                return response;
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
-
         return null;
     }
 
+    //     接受远端的binder 对象   进程B就可以了通过Binder对象去操作 服务端的 方法
     private class HermesServiceConnection implements ServiceConnection {
         private Class<? extends HermesService> mClass;
 

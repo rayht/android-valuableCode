@@ -5,14 +5,30 @@ package com.ht.eventbus.request;
  * Date 2018-05-25
  */
 public class RequestBean {
-//    类型 B   UserManager userManager.getInstance()   请求对象的class类型
+
+    /**
+     * 请求对象的Class Name
+     */
     private String className;
-//    className com.dongn.UserManager
+
+    /**
+     * 返回类型的Class Name
+     */
     private String resultClassName;
+
+    /**
+     *
+     */
     private String requestObject;
+
+    /**
+     * 请求方法名，getInstance默认为null
+     */
     private String methodName;
 
-//    参数
+    /**
+     * 请求方法methodName对应的请求参数数组
+     */
     private RequestParameter[] requestParameter;
 
     public String getClassName() {

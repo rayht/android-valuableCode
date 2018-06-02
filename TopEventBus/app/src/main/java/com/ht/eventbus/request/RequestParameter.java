@@ -6,8 +6,14 @@ package com.ht.eventbus.request;
  */
 public class RequestParameter {
 
+    /**
+     * 参数名
+     */
     private String parameterClassName;
 
+    /**
+     * 参数值
+     */
     private String parameterValue;
 
     public RequestParameter() {
